@@ -13,11 +13,10 @@ const Orders = require('./Routes/OrderRoute')
 const ProductAd=require('./Routes/ProductAdminRoute')
 const Products =require('./Routes/ProductsRoute')
 const Middlewares=require('./Middlewares/auth')
-const uri =process.env.URI;
     const connecttodb= async () => {
     try {
         mongoose.set('strictQuery', false); 
-            mongoose.connect(uri);
+            mongoose.connect(process.env.URI);
         console.log('Connected to MongoDB');
     } catch (error) {
         console.error('Error connecting to MongoDB:', error);
