@@ -97,7 +97,7 @@ exports.CreateOrder = async (req, res) => {
             userId,
             cartItemId: { $in: cartItemIds.map(Number) } 
         });
-            console.log(cartItems)
+            
         if (cartItems.length === 0) {
             return res.status(404).json({ message: "No matching cart items found" });
         }

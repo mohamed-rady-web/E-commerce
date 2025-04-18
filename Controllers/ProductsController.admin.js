@@ -34,9 +34,6 @@ exports.AddToFlashSale = async (req, res) => {
             return res.status(404).json({ message: "Product not found" });
 
         }
-        if(product.isInFlashSale === true){ 
-            return res.status(400).json({ message: "Product is already in flash sales" });
-        }
         const Offerproduct = await Offers.create({
             productId:productId,
             offerPercent: offerPercent,
@@ -147,7 +144,7 @@ exports.ShowAllProducts = async (req, res) => {
 };
 exports.ShowFlashOffers = async (req, res) => {
     try {
-        const offers = await Offers.find().limit(3); // No populate needed
+        const offers = await Offers.find().limit(3); 
         res.status(200).json({ offers });
     } catch (error) {
         console.error("Error fetching offers:", error);
@@ -161,6 +158,11 @@ exports.deleteFromFlashSales =async (req,res) => {
         const {offerId}= req.params
         const deleteOffer= await Offers.findOneAndDelete({offerId:offerId})
         res.status(201).json("the offer deleted succesfully")
+        const product = await Productsmodel.findOneAndUpdate(
+            {productId:deleteOffer.productId},
+            {$set:{isInFlashSale:false}},
+            {new:true}
+        )
     }catch{
         console.error("Error Deleting  offers:", error);
         res.status(500).json({ message: "Something went wrong" });
@@ -170,7 +172,7 @@ exports.slider = async (req,res) => {
     try{
         if (!req.user || req.user.role !== 'admin') {
             return res.status(403).json({ message: "Access denied" });}
-            const {Image,Title}= req.body
+            const {Image,Title,Logo,Description,ButtonText,ButtonLink}= req.body
         const sliderprod = await Slider.create(req.body);
         res.status(201).json({ message: "Slider created successfully" });
     }catch(error){
@@ -180,9 +182,16 @@ exports.slider = async (req,res) => {
 }
 exports.showSliders= async (req,res) => {
     try{
-        const sliders = await Slider.find();
-        const Images=sliders.map(slider =>slider.Image)
-        res.status(200).json({Images});
+        const sliders = await Slider.find({},{
+            _id:0,
+            Image:1,
+            Title:1,
+            Logo:1,
+            Description:1,
+            ButtonText:1,
+            ButtonLink:1,
+        }).sort({createdAt:-1}).limit(3);
+        res.status(200).json({sliders});
     }catch(error){
         console.error("Error fatshing sliders:", error);
         res.status(500).json({ message: "Something went wrong" });
