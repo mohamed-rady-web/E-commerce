@@ -5,7 +5,7 @@ const sendEmail = require("../Models/SendEmail");
 const crypto = require("crypto");
 const { tokenBlacklist } = require("../Middlewares/auth");
 const UserModel=require('../Models/UsModel')
-require('dotenv').config({path:'./File.env'});
+require('dotenv').config();
 const prodcutModel =require('../Models/Productsmodel')
 const orderModel =require('../Models/Ordersmodel')
 const ReportModel=require('../Models/ReportModel')

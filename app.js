@@ -3,7 +3,7 @@ app = express();
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 app.use(bodyParser.json());
-require('dotenv').config({path:'./File.env'});
+require('dotenv').config();
 const AuthRoute = require('./Routes/AuthRoute');
 const About =require ('./Routes/AboutRoute')
 const ContactAd= require('./Routes/ContactAdminRoute')

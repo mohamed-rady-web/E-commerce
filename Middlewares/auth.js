@@ -1,6 +1,6 @@
 // authMiddleware.js
 const jwt = require('jsonwebtoken');
-require('dotenv').config({path:'../File.env'})
+require('dotenv').config()
 
 const tokenBlacklist = new Set();
 
