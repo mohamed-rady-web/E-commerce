@@ -156,6 +156,8 @@ exports.ShowFlashOffers = async (req, res) => {
 };
 exports.deleteFromFlashSales =async (req,res) => {
     try{
+        if (!req.user || req.user.role !== 'admin') {
+            return res.status(403).json({ message: "Access denied" });}
         const {offerId}= req.params
         const deleteOffer= await Offers.findOneAndDelete({offerId:offerId})
         res.status(201).json("the offer deleted succesfully")

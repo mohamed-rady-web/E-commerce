@@ -9,29 +9,21 @@ exports.AddToCart = async (req, res) => {
         const { productId } = req.params;
         const { quantity = 1 } = req.body;
         const userId = req.user.id;
-
-        console.log("Received:", { userId, productId, quantity });
-
-        // 1. Find product by custom productId field
         const product = await Product.findOne({ productId });
         if (!product) {
             return res.status(404).json({ message: "Product not found" });
         }
-
-        // 2. Check if item already in cart
         const existingCartItem = await Cart.findOne({ userId, productId });
         if (existingCartItem) {
-            // Update quantity
             const updatedQuantity = existingCartItem.quantity + Number(quantity);
             await Cart.updateOne(
                 { userId, productId },
                 { quantity: updatedQuantity }
             );
         } else {
-            // 3. Create new cart item
             await Cart.create({
                 userId,
-                productId: product.productId, // Make sure this exists
+                productId: product.productId, 
                 quantity: Number(quantity),
                 productname: product.name,
                 productPrice: product.price,
@@ -54,10 +46,7 @@ exports.Cart = async (req, res) => {
             return res.status(403).json({ message: "Access denied" });
         }
         const userId = req.user.id;
-        const cartItems = await Cart.find({ userId }); // Query cart items by userId
-       
-
-        // Map through the cart items and return the necessary details
+        const cartItems = await Cart.find({ userId }); 
         const cartDetails = cartItems.map(item => ({
             productName: item.productname,
             CartItemId:item.cartItemId,
@@ -66,7 +55,7 @@ exports.Cart = async (req, res) => {
             quantity: item.quantity,
         }));
 
-        res.status(200).json(cartDetails); // Return the cart details in the response
+        res.status(200).json(cartDetails);
     } catch (error) {
         console.error("Error fetching cart:", error);
         res.status(500).json({ message: "Something went wrong" });
@@ -253,17 +242,33 @@ exports.OrderDetails = async (req, res) => {
 exports.CancelOrder = async (req, res) => {
     try {
         const { orderId } = req.params;
+
         if (!req.user) {
             return res.status(403).json({ message: "Access denied" });
         }
-        const userId = req.user.id; 
-        const order = await Order.findOneAndDelete({orderId});
+
+        const userId = req.user.id;
+
+        // Find the order first (DON'T delete yet)
+        const order = await Order.findOne({ orderId });
+
         if (!order || order.userId.toString() !== userId) {
             return res.status(404).json({ message: "Order not found" });
         }
-        res.status(200).json({ message: "Order cancelled successfully", order });
+        for (const item of order.products) {
+            await Product.findByIdAndUpdate(
+                item.productId,
+                { $inc: { stockQuantity: item.quantity } },
+                { new: true }
+            );
+        }
+        await Order.findOneAndDelete({ orderId });
+
+        res.status(200).json({ message: "Order cancelled and stock updated", order });
+
     } catch (error) {
         console.error("Error cancelling order:", error);
         res.status(500).json({ message: "Something went wrong" });
     }
-}
+};
+

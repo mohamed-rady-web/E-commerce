@@ -36,6 +36,8 @@ exports.Report = async (req, res) => {
 }
 exports.RespondToReport = async (req, res) => {
     try {
+        if (!req.user || req.user.role !== 'admin') {
+            return res.status(403).json({ message: "Access denied" });}
         const { reportId } = req.params;
         const { message } = req.body;
 
@@ -87,6 +89,8 @@ exports.GetContact = async (req, res) => {
 }
 exports.SeeAllRep= async (req,res) => {
     try{
+        if (!req.user || req.user.role !== 'admin') {
+            return res.status(403).json({ message: "Access denied" });}
         const reports = await ReportModel.find().sort({createdAt:-1});
         res.status(200).json({reports});
     }catch(error){

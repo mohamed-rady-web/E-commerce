@@ -227,7 +227,7 @@ exports.Catgory = async (req, res) => {
 };
 exports.BestSelling = async (req, res) => {
     try{    
-        const products = await Product.find().sort({ quantityinorder: -1 }).limit(20);
+        const products = await Product.find().sort({ quantityinorder: -1 }).limit(8);
         res.status(200).json({ products });
         } catch (error) {
         console.error("Error fetching best-selling products:", error);

@@ -33,10 +33,11 @@ exports.SeeAll = async (req, res) => {
 }
 exports.SearchOrder = async (req, res) => {
     try {
-        const { orderId } = req.params;
-        if (!req.user || req.user.role !== 'admin') {
+         if (!req.user || req.user.role !== 'admin') {
             return res.status(403).json({ message: "Access denied" });
         }
+        const { orderId } = req.params;
+       
         const order = await Order.findOne({orderId:orderId});
         if (!order) {
             return res.status(404).json({ message: "Order not found" });
