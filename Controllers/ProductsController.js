@@ -270,12 +270,9 @@ exports.ShowOffers = async (req, res) => {
 } 
 exports.ShowAllProducts = async (req, res) => {
     try {
-        if (!req.user || req.user.role !== 'admin') {
-            return res.status(403).json({ message: "Access denied" });
-        }else {
         const products = await Product.find();
         res.status(200).json({ products });
-    }} catch (error) {
+    } catch (error) {
         console.error("Error fetching products:", error);
         res.status(500).json({ message: "Something went wrong" });
     }

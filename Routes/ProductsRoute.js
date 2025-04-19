@@ -13,6 +13,6 @@ router.get('/related-items/:category/:productId',ProductController.showRelatedIt
 router.get('/offers/',ProductController.ShowOffers)
 router.get('/show-slider/',ProductController.showSliders)
 router.get('/show-flashsales/',ProductController.ShowFlashOffers)
-router.get('/show-all',ProductController.ShowAllProducts);
+router.get('/show-all/',ProductController.ShowAllProducts);
 
 module.exports = router;
