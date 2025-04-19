@@ -11,4 +11,8 @@ router.get('/show-category/:category',ProductController.Catgory);
 router.get('/show-best/',ProductController.BestSelling);
 router.get('/related-items/:category/:productId',ProductController.showRelatedItems);
 router.get('/offers/',ProductController.ShowOffers)
+router.get('/show-slider/',ProductController.showSliders)
+router.get('/show-flashsales/',ProductController.ShowFlashOffers)
+router.get('/show-all',ProductController.ShowAllProducts);
+
 module.exports = router;

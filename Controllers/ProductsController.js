@@ -268,3 +268,41 @@ exports.ShowOffers = async (req, res) => {
         res.status(500).json({ message: "Something went wrong" });
     }
 } 
+exports.ShowAllProducts = async (req, res) => {
+    try {
+        if (!req.user || req.user.role !== 'admin') {
+            return res.status(403).json({ message: "Access denied" });
+        }else {
+        const products = await Product.find();
+        res.status(200).json({ products });
+    }} catch (error) {
+        console.error("Error fetching products:", error);
+        res.status(500).json({ message: "Something went wrong" });
+    }
+};
+exports.ShowFlashOffers = async (req, res) => {
+    try {
+        const offers = await Offers.find().limit(3); 
+        res.status(200).json({ offers });
+    } catch (error) {
+        console.error("Error fetching offers:", error);
+        res.status(500).json({ message: "Something went wrong" });
+    }
+};
+exports.showSliders= async (req,res) => {
+    try{
+        const sliders = await Slider.find({},{
+            _id:0,
+            Image:1,
+            Title:1,
+            Logo:1,
+            Description:1,
+            ButtonText:1,
+            ButtonLink:1,
+        }).sort({createdAt:-1}).limit(3);
+        res.status(200).json({sliders});
+    }catch(error){
+        console.error("Error fatshing sliders:", error);
+        res.status(500).json({ message: "Something went wrong" });
+    }
+};
