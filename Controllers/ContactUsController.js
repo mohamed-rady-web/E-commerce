@@ -21,9 +21,6 @@ exports.UsContact = async (req, res) => {
 }
 exports.Report = async (req, res) => {
     try {
-        if (!req.user) {
-            return res.status(403).json({ message: "Access denied" });
-        }
         const { name, email, PhoneNumber, Report } = req.body;
         const newReport = new ReportModel({ name, email, PhoneNumber, Report });
         await newReport.save();
@@ -76,9 +73,6 @@ exports.DeleteReport = async (req, res) => {
 }
 exports.GetContact = async (req, res) => {
     try {
-        if (!req.user) {
-            return res.status(403).json({ message: "Access denied" });
-        }
         const contacts = await ContactUs.find();
         res.status(200).json({ contacts });
     } catch (error) {
