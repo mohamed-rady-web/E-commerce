@@ -28,8 +28,8 @@ app.listen(process.env.PORT, () => {
     console.log(`Server is Running on Your Port`);
 })
 const allowedOrigins = [
-    'http://192.168.1.7:5173',
-    'https://192.168.1.7:5173'
+    'http://e-commerce-production-efac.up.railway.app',
+    'https://e-commerce-production-efac.up.railway.app'
   ];
   
   app.use(cors({
