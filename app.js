@@ -43,7 +43,7 @@ const allowedOrigins = [
     },
     credentials: true
   }));
-  
+  app.set('trust proxy', 1);
 app.use('/api', AuthRoute);
 app.use('/product', Products);
 app.use('/', ContactUs)
