@@ -2,7 +2,6 @@ const express = require('express');
 app = express();
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
-const cors = require('cors');
 app.use(bodyParser.json());
 require('dotenv').config();
 const AuthRoute = require('./Routes/AuthRoute');
@@ -27,24 +26,6 @@ connecttodb();
 app.listen(process.env.PORT, () => {
     console.log(`Server is Running on Your Port`);
 })
-const allowedOrigins = [
-    'http://192.168.1.7:5173/contact',
-    'https://192.168.1.7:5173/contact'
-  ];
-  
-  app.use(cors({
-    origin: function (origin, callback) {
-      if (!origin || allowedOrigins.includes(origin)) {
-        callback(null, true);
-      } else {
-        callback(new Error('Not allowed by CORS'));
-      }
-    },
-    methods: ['GET', 'POST', 'PUT', 'DELETE'],
-    credentials: true
-  }));
-  
-
 app.use('/api', AuthRoute);
 app.use('/product', Products);
 app.use('/', ContactUs)
