@@ -43,6 +43,14 @@ const allowedOrigins = [
     },
     credentials: true
   }));
+  if (process.env.NODE_ENV === 'production') {
+    app.use((req, res, next) => {
+      if (req.headers['x-forwarded-proto'] !== 'https') {
+        return res.redirect('https://' + req.headers.host + req.url);
+      }
+      next();
+    });
+  }
   app.set('trust proxy', 1);
 app.use('/api', AuthRoute);
 app.use('/product', Products);
