@@ -32,6 +32,12 @@ exports.login = async (req, res) => {
         }
         else
         {let token =jwt.sign({name:user.name,id:user._id,role:user.role},process.env.JWT_SECRET_KEY,{expiresIn:'1h'});
+     res.cookie("token", token, {
+    httpOnly: true,
+    secure: true,         
+    sameSite: "None",     
+    maxAge: 24 * 60 * 60 * 1000 
+  });
             res.status(200).json({ message: 'Login successfully',name:user.name ,email: user.email,token:token });
     }
     } catch (error) {
