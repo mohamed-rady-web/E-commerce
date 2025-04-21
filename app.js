@@ -27,11 +27,23 @@ connecttodb();
 app.listen(process.env.PORT, () => {
     console.log(`Server is Running on Your Port`);
 })
-app.use(cors({
-    origin: 'http://192.168.1.7:5173', 
+const allowedOrigins = [
+    'http://192.168.1.7:5173',
+    'https://192.168.1.7:5173'
+  ];
+  
+  app.use(cors({
+    origin: function (origin, callback) {
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error('Not allowed by CORS'));
+      }
+    },
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     credentials: true
   }));
+  
 
 app.use('/api', AuthRoute);
 app.use('/product', Products);
