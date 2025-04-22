@@ -11,7 +11,7 @@ const orderModel =require('../Models/Ordersmodel')
 const ReportModel=require('../Models/ReportModel')
 exports.register = async (req, res) => {
     try {
-        const existingUser = await User.findOne({ email });
+        const existingUser = await User.findOne({ email: req.body.email });
         if (existingUser) {
           return res.status(400).json({ message: 'User already registered with this email.' });
         }
