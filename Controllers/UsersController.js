@@ -11,7 +11,13 @@ const orderModel =require('../Models/Ordersmodel')
 const ReportModel=require('../Models/ReportModel')
 exports.register = async (req, res) => {
     try {
+        const existingUser = await User.findOne({ email });
+        if (existingUser) {
+          return res.status(400).json({ message: 'User already registered with this email.' });
+        }
         let newuser= await User(req.body);
+        if(req.body.email === undefined || req.body.password === undefined || req.body.name === undefined){
+            return res.status(400).json({ message: 'Please fill all the fields' });}
         let hashpassword= await bcrypt.hash(newuser.password, 10);
         newuser.password= hashpassword;
         let user= await newuser.save();
