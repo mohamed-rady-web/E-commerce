@@ -180,7 +180,7 @@ exports.Checkout = async (req, res) => {
             orderId: order.orderId,
             totalPrice:order.totalPrice,
             checkoutDate: new Date(), 
-                DeleverDate: new Date(Date.now() + 2 * 24 * 60 * 60 * 1000), // 2 days from now
+                DeleverDate: new Date(Date.now() + 2 * 24 * 60 * 60 * 1000),
                 Orderstatus: "Coming to you", 
         });
   
@@ -249,7 +249,6 @@ exports.CancelOrder = async (req, res) => {
 
         const userId = req.user.id;
 
-        // Find the order first (DON'T delete yet)
         const order = await Order.findOne({ orderId });
 
         if (!order || order.userId.toString() !== userId) {

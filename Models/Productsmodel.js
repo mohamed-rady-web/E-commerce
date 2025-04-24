@@ -25,7 +25,6 @@ const ProductSchema = new Schema({
     orderCount: { type: Number, default: 0, min: 0 },
     isInFlashSale:{type:Boolean,default:false}
 }, { timestamps:true});
-// Apply auto-increment plugin for productId
 ProductSchema.plugin(autoIncrement, {
     inc_field: 'productId',
     id: 'product_seq',

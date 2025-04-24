@@ -22,7 +22,7 @@ exports.AddToFlashSale = async (req, res) => {
             return res.status(403).json({ message: "Access denied" });
         }
 
-        const {productId} = req.params; // ✅
+        const {productId} = req.params; 
 
 
         const { offerPercent, offerPrice, offerImage, startDate, endDate } = req.body;
