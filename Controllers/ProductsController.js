@@ -56,16 +56,12 @@ exports.RateProduct = async (req, res) => {
 exports.ShowProduct = async (req, res) => {
     try {
         const { id } = req.params;
-        
-        // Validate input
         if (!id) {
             return res.status(400).json({ 
                 success: false,
                 message: "Product ID is required" 
             });
         }
-
-        // Convert to number since productId is numeric
         const productId = Number(id);
         if (isNaN(productId)) {
             return res.status(400).json({ 
@@ -73,8 +69,6 @@ exports.ShowProduct = async (req, res) => {
                 message: "Invalid Product ID format - must be a number" 
             });
         }
-
-        // Find by productId field (not _id)
         const product = await Product.findOne({ productId });
 
         if (!product) {
@@ -101,16 +95,12 @@ exports.IncreamentQuantity = async (req, res) => {
     try { 
         const { productId } = req.params;
         const { quantity = 1 } = req.body;
-
-        // Validate quantity is a positive number
         if (typeof quantity !== 'number' || isNaN(quantity) || quantity <= 0) {
             return res.status(400).json({ 
                 success: false,
                 message: "Valid positive quantity is required" 
             });
         }
-
-        // Convert productId to number
         const numericProductId = Number(productId);
         if (isNaN(numericProductId)) {
             return res.status(400).json({ 
@@ -118,8 +108,6 @@ exports.IncreamentQuantity = async (req, res) => {
                 message: "Invalid Product ID format" 
             });
         }
-
-        // FIRST get the current product to know the existing quantity
         const currentProduct = await Product.findOne({ productId: numericProductId });
         
         if (!currentProduct) {
@@ -128,12 +116,8 @@ exports.IncreamentQuantity = async (req, res) => {
                 message: "Product not found" 
             });
         }
-
-        // Calculate new quantity based on CURRENT quantityinorder
-        const currentQuantity = currentProduct.quantityinorder || 0; // Handle undefined case
+        const currentQuantity = currentProduct.quantityinorder || 0; 
         const newQuantity = currentQuantity + quantity;
-
-        // Update the product with new calculated quantity
         const updatedProduct = await Product.findOneAndUpdate(
             { productId: numericProductId },
             { $set: { quantityinorder: newQuantity } },
@@ -166,8 +150,6 @@ exports.DecreamentQuantity = async (req, res) => {
                 message: "Invalid Product ID format" 
             });
         }
-
-        // First get current product to know existing quantity
         const currentProduct = await Product.findOne({ productId: numericProductId });
         
         if (!currentProduct) {
@@ -176,15 +158,11 @@ exports.DecreamentQuantity = async (req, res) => {
                 message: "Product not found" 
             });
         }
-
-        // Calculate new quantity (ensure it doesn't go negative)
         const currentQuantity = currentProduct.quantityinorder;
         const newQuantity =  currentQuantity - 1;
         if(newQuantity<1){
             return res.status(400).json({massege:"cannot Decrement again"})
         } else{
-
-        // Update the product with new quantity
         const updatedProduct = await Product.findOneAndUpdate(
             { productId: numericProductId },
             { $set: { quantityinorder: newQuantity } },
@@ -228,7 +206,7 @@ exports.Catgory = async (req, res) => {
 exports.BestSelling = async (req, res) => {
     try{    
         const products = await Product.find().sort({ quantityinorder: -1 }).limit(8);
-        res.status(200).json({ products });
+        res.status(200).json({ products: {name:products.name,price:products.price,rate:products.rating} });
         } catch (error) {
         console.error("Error fetching best-selling products:", error);
         res.status(500).json({ message: "Something went wrong" });
@@ -244,7 +222,7 @@ exports.showRelatedItems = async (req, res) => {
             productId: { $ne: Number(productId) }
         },{
              name:1,
-             imageUrl_1:1,
+             imageUrl_6:1,
              price:1,
              _id:0,
         } 
