@@ -22,13 +22,13 @@ exports.AddToFlashSale = async (req, res) => {
             return res.status(403).json({ message: "Access denied" });
         }
 
-        const {productId} = req.params; 
+        const {productId} = req.body; 
 
 
         const { offerPercent, offerPrice, offerImage, startDate, endDate } = req.body;
 
         const product = await Productsmodel.findOne(
-            { productId:productId });
+            {productId:productId});
 
         if (!product) {
             return res.status(404).json({ message: "Product not found" });
@@ -73,14 +73,14 @@ exports.UpdateProduct = async (req, res) => {
         return res.status(403).json({ message: "Access denied" });
       }
   
-      const { productId } = req.params;
+      const { productId } = req.body;
       const  updateddata  = req.body;
       Object.keys( updateddata ).forEach(
         (key) =>  updateddata [key] === undefined && delete  updateddata [key]
     );
   
       const product = await Productsmodel.findOneAndUpdate(
-        { productId:productId },
+         {productId:productId},
         {
           $set: {  ...updateddata }
         },
@@ -103,7 +103,7 @@ exports.ChangePrice = async (req,res) =>{
     try {
         if (!req.user || req.user.role !== 'admin') {
             return res.status(403).json({ message: "Access denied" })};
-            const {productId}=req.params;
+            const {productId}=req.body;
             const {price}=req.body;
             
             const updatedPrice= await Productsmodel.findOneAndUpdate(
@@ -122,7 +122,7 @@ exports.DeleteProduct = async (req,res) =>{
         if (!req.user || req.user.role !== 'admin') {
             return res.status(403).json({ message: "Access denied" });
         } 
-        const {productId}=req.params;
+        const {productId}=req.body;
         const deleteProduct= await Productsmodel.findOneAndDelete({productId:productId})
        return res.status(201).json({Massege:"Product deleted sucsesfully"})
     } catch (error) {
@@ -134,7 +134,7 @@ exports.deleteFromFlashSales =async (req,res) => {
     try{
         if (!req.user || req.user.role !== 'admin') {
             return res.status(403).json({ message: "Access denied" });}
-        const {offerId}= req.params
+        const {offerId}= req.body;
         const deleteOffer= await Offers.findOneAndDelete({offerId:offerId})
         res.status(201).json("the offer deleted succesfully")
         const product = await Productsmodel.findOneAndUpdate(

@@ -15,7 +15,7 @@ const ProductSchema = new Schema({
     imageUrl_3: { type: String},
     imageUrl_4: { type: String},
     imageUrl_5: { type: String},
-    imageUrl_6:{ type: String,required:true},
+    imageUrl_6:{ type: String},
     quantityinorder:{type:Number,default:0},
     category: { type: String, required: true },
     stockQuantity: { type: Number, default: 0, min: 0 },

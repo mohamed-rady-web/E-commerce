@@ -35,10 +35,10 @@ exports.RespondToReport = async (req, res) => {
     try {
         if (!req.user || req.user.role !== 'admin') {
             return res.status(403).json({ message: "Access denied" });}
-        const { reportId } = req.params;
+        const { reportId } = req.body;
         const { message } = req.body;
 
-        const report = await ReportModel.findById(reportId)
+        const report = await ReportModel.findById(reportId);
 
         if (!report) {
             return res.status(404).json({ message: "Report not found" });
@@ -60,7 +60,7 @@ exports.DeleteReport = async (req, res) => {
         if (!req.user || req.user.role !== 'admin') {
             return res.status(403).json({ message: "Access denied" });
         }
-        const { reportId } = req.params;
+        const { reportId } = req.body;
         const report = await Report.findByIdAndDelete(reportId);
         if (!report) {
             return res.status(404).json({ message: "Report not found" });

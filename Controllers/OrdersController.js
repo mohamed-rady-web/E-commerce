@@ -6,40 +6,45 @@ const Checkout =require('../Models/CheckoutModel');
 
 exports.AddToCart = async (req, res) => {
     try {
-        const { productId } = req.params;
-        const { quantity = 1 } = req.body;
-        const userId = req.user.id;
-        const product = await Product.findOne({ productId });
-        if (!product) {
-            return res.status(404).json({ message: "Product not found" });
-        }
-        const existingCartItem = await Cart.findOne({ userId, productId });
-        if (existingCartItem) {
-            const updatedQuantity = existingCartItem.quantity + Number(quantity);
-            await Cart.updateOne(
-                { userId, productId },
-                { quantity: updatedQuantity }
-            );
-        } else {
-            await Cart.create({
-                userId,
-                productId: product.productId, 
-                quantity: Number(quantity),
-                productname: product.name,
-                productPrice: product.price,
-                productImage: product.imageUrl_1
-            });
-        }
-
-        return res.status(200).json({ message: "Added to cart successfully" });
-
+      let { productId } = req.body;
+      const userId = req.user.id;
+      productId = Number(productId);
+  
+      const product = await Product.findOne({ productId });
+  
+      if (!product) {
+        return res.status(404).json({ message: "Product not found" });
+      }
+  
+      let cartItem = await Cart.findOne({ userId, productId });
+  
+      if (cartItem) {
+        cartItem.quantity += 1;
+        cartItem.productname = product.name;
+        cartItem.productPrice = product.price;
+        cartItem.productImage = product.imageUrl_1;
+  
+        await cartItem.save();
+        return res.status(200).json({ message: "Quantity updated", cartItem });
+      } else {
+        cartItem = new Cart({
+          userId,
+          productId: product.productId,
+          quantity: 1,
+          productname: product.name,
+          productPrice: product.price,
+          productImage: product.imageUrl_1
+        });
+        await cartItem.save();
+        return res.status(201).json({ message: "Product added to cart", cartItem });
+      }
     } catch (error) {
-        console.error("Error adding to cart:", error);
-        res.status(500).json({ message: "Something went wrong" });
+      console.error("AddToCart Error:", error);
+      res.status(500).json({ message: "Something went wrong" });
     }
-};
-
-
+  };
+  
+  
 exports.Cart = async (req, res) => {
     try {
         if (!req.user) {
@@ -64,12 +69,12 @@ exports.Cart = async (req, res) => {
 
 exports.RemoveFromCart = async (req, res) => {
     try {
-        const { cartItemId } = req.params;
+        const { cartItemId } = req.body;
         if (!req.user) {
             return res.status(403).json({ message: "Access denied" });
         }
         const userId = req.user.id; 
-        const cartItem = await Cart.findOneAndDelete(cartItemId);
+        const cartItem = await Cart.findOneAndDelete({cartItemId:cartItemId}, {userId });
         if (!cartItem) {
             return res.status(404).json({ message: "Cart item not found" });
         }
@@ -94,7 +99,9 @@ exports.CreateOrder = async (req, res) => {
 
 
         const cartItems = await Cart.find({ 
-            userId,
+      
+  
+        userId,
             cartItemId: { $in: cartItemIds.map(Number) } 
         });
             
@@ -157,10 +164,10 @@ exports.Checkout = async (req, res) => {
       }
         const {username}= req.user.name
       const userId = req.user.id;
-      const { orderId } = req.params;
+      const { orderId } = req.body;
       const {phonenumber}=req.body;
   
-      const order = await Order.findOne({ orderId: parseInt(orderId), userId });
+      const order = await Order.findOne({ orderId:orderId, userId });
   
       if (!order) {
         return res.status(404).json({ message: "Order not found" });
@@ -223,12 +230,12 @@ exports.Allorders = async (req, res) => {
 
 exports.OrderDetails = async (req, res) => {
     try {
-        const {orderId } = req.params;
+        const {orderId } = req.body;
         if (!req.user) {
             return res.status(403).json({ message: "Access denied" });
         }
         const userId = req.user.id; 
-        const order = await Order.findOne({orderId});
+        const order = await Order.findOne({orderId:orderId, userId });
         if (!order || order.userId.toString() !== userId) {
             return res.status(404).json({ message: "Order not found" });
         }
@@ -241,7 +248,7 @@ exports.OrderDetails = async (req, res) => {
 
 exports.CancelOrder = async (req, res) => {
     try {
-        const { orderId } = req.params;
+        const { orderId } = req.body;
 
         if (!req.user) {
             return res.status(403).json({ message: "Access denied" });
@@ -249,18 +256,23 @@ exports.CancelOrder = async (req, res) => {
 
         const userId = req.user.id;
 
-        const order = await Order.findOne({ orderId });
+       
+        const order = await Order.findOne({ orderId:orderId, userId });
 
-        if (!order || order.userId.toString() !== userId) {
+        if (!order) {
             return res.status(404).json({ message: "Order not found" });
         }
+        if (!Array.isArray(order.products)) {
+            return res.status(400).json({ message: "Invalid order products data" });
+        }
         for (const item of order.products) {
-            await Product.findByIdAndUpdate(
-                item.productId,
+            await Product.findOneAndUpdate(
+                { productId: item.productId }, 
                 { $inc: { stockQuantity: item.quantity } },
                 { new: true }
             );
         }
+
         await Order.findOneAndDelete({ orderId });
 
         res.status(200).json({ message: "Order cancelled and stock updated", order });

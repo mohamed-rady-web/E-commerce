@@ -18,7 +18,7 @@ const categoryMap = {
 };
 exports.RateProduct = async (req, res) => {
     try {
-        const { productId } = req.params;
+        const { productId } = req.body;
         const { rating } = req.body;
         const userId = req.user.id;
 
@@ -55,7 +55,7 @@ exports.RateProduct = async (req, res) => {
 };
 exports.ShowProduct = async (req, res) => {
     try {
-        const { id } = req.params;
+        const { id } = req.body;
         if (!id) {
             return res.status(400).json({ 
                 success: false,
@@ -93,7 +93,7 @@ exports.ShowProduct = async (req, res) => {
 };
 exports.IncreamentQuantity = async (req, res) => {
     try { 
-        const { productId } = req.params;
+        const { productId } = req.body;
         const { quantity = 1 } = req.body;
         if (typeof quantity !== 'number' || isNaN(quantity) || quantity <= 0) {
             return res.status(400).json({ 
@@ -142,7 +142,7 @@ exports.IncreamentQuantity = async (req, res) => {
 };
 exports.DecreamentQuantity = async (req, res) => {
     try { 
-        const { productId } = req.params;
+        const { productId } = req.body;
         const numericProductId = Number(productId);
         if (isNaN(numericProductId)) {
             return res.status(400).json({ 
@@ -188,7 +188,7 @@ exports.DecreamentQuantity = async (req, res) => {
 };
 exports.Catgory = async (req, res) => {
     try {
-        const { category } = req.params;
+        const { category } = req.body;
         const actualCategory = categoryMap[category.toLowerCase()];
 
         if (!actualCategory) {
@@ -215,7 +215,7 @@ exports.BestSelling = async (req, res) => {
 }
 exports.showRelatedItems = async (req, res) => {
     try {
-        const { category, productId } = req.params;
+        const { category, productId } = req.body;
 
         const relatedProducts = await Product.find({
             category: category,
