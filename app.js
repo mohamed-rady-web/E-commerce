@@ -27,31 +27,10 @@ connecttodb();
 app.listen(process.env.PORT, () => {
     console.log(`Server is Running on Your Port`);
 })
-const allowedOrigins = [
-    'http://192.168.1.7:5173',
-    'http://localhost:5173',
-    'https://e-commerce-production-efac.up.railway.app'
-  ];
-  
-  app.use(cors({
-    origin: function (origin, callback) {
-      if (!origin || allowedOrigins.includes(origin)) {
-        callback(null, true);
-      } else {
-        callback(new Error('Not allowed by CORS'));
-      }
-    },
-    credentials: true
-  }));
-  if (process.env.NODE_ENV === 'production') {
-    app.use((req, res, next) => {
-      if (req.headers['x-forwarded-proto'] !== 'https') {
-        return res.redirect('https://' + req.headers.host + req.url);
-      }
-      next();
-    });
-  }
-  app.set('trust proxy', 1);
+app.use(cors());
+app.get("/", (req, res) => {
+    res.send("App is run on all origins");})
+
 app.use('/api', AuthRoute);
 app.use('/product', Products);
 app.use('/', ContactUs)
