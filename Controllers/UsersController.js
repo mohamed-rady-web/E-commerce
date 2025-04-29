@@ -120,6 +120,9 @@ exports.updateProfile = async (req, res) => {
         Object.keys( updatedData ).forEach(
             (key) =>  updatedData [key] === undefined && delete  updatedData [key]
         );
+        if (updatedData==='password'){
+            return res.status(400).json({ message: "Password cannot be updated here" });
+        }
 
         const updatedUser = await User.findByIdAndUpdate(
             userId,
