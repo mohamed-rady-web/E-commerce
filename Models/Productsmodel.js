@@ -1,3 +1,4 @@
+const { request } = require('express');
 const mongoose = require('mongoose');
 const autoIncrement = require('mongoose-sequence')(mongoose);
 const Schema = mongoose.Schema;
@@ -10,12 +11,13 @@ const ProductSchema = new Schema({
     name: { type: String, required: true,unique: true},
     description: { type: String, required: true},
     price: { type: Number, required: true},
-    imageUrl_1: { type: String, required: true },
-    imageUrl_2: { type: String},
-    imageUrl_3: { type: String},
-    imageUrl_4: { type: String},
-    imageUrl_5: { type: String},
-    imageUrl_6:{ type: String},
+    CoverImage: { type: String, required: true },
+    productImage: {
+        type: [String],
+        default: [],
+        required: true,
+    },
+    showImage:{ type: String,required: true },
     quantityinorder:{type:Number,default:0},
     category: { type: String, required: true },
     stockQuantity: { type: Number, default: 0, min: 0 },
