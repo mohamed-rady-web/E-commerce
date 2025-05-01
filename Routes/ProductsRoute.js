@@ -14,5 +14,6 @@ router.get('/offers/',ProductController.ShowOffers)
 router.get('/show-slider/',ProductController.showSliders)
 router.get('/show-flashsales/',ProductController.ShowFlashOffers)
 router.get('/show-all/',ProductController.ShowAllProducts);
+router.get('/product-inhome/',ProductController.ShowsomeProducts);
 
 module.exports = router;

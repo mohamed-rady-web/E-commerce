@@ -80,7 +80,7 @@ exports.ShowProduct = async (req, res) => {
 
         res.status(200).json({ 
             success: true,
-            data:{name:product.name,description:product.description,rate:product.rate,image1:product.imageUrl_1,image2:product.imageUrl_2,image3:product.imageUrl_3,image4:product.imageUrl_4,image5:product.imageUrl_5,category:product.category}
+            data:{name:product.name,description:product.description,rate:product.rate,Cover:product.CoverImage,Images:product.productImage,category:product.category}
         });
     } catch (error) {
         console.error("Error fetching product:", error);
@@ -205,8 +205,15 @@ exports.Catgory = async (req, res) => {
 };
 exports.BestSelling = async (req, res) => {
     try{    
-        const products = await Product.find().sort({ quantityinorder: -1 }).limit(8);
-        res.status(200).json({ products: {name:products.name,price:products.price,rate:products.rating} });
+        const products = await Product.find({},{
+            name:1,
+            showImage:1,
+            price:1,
+            rating:1,
+            ratingCount:1,
+            _id:0,
+        }).sort({ quantityinorder: -1 }).limit(8);
+        res.status(200).json({ products});
         } catch (error) {
         console.error("Error fetching best-selling products:", error);
         res.status(500).json({ message: "Something went wrong" });
@@ -222,7 +229,7 @@ exports.showRelatedItems = async (req, res) => {
             productId: { $ne: Number(productId) }
         },{
              name:1,
-             imageUrl_6:1,
+             showImage:1,
              price:1,
              _id:0,
         } 
@@ -248,7 +255,14 @@ exports.ShowOffers = async (req, res) => {
 } 
 exports.ShowAllProducts = async (req, res) => {
     try {
-        const products = await Product.find();
+        const products = await Product.find({},{
+            name:1,
+            showImage:1,
+            price:1,
+            rating:1,
+            ratingCount:1,
+            _id:0,
+        }).sort({createdAt:-1});
         res.status(200).json({ products });
     } catch (error) {
         console.error("Error fetching products:", error);
@@ -278,6 +292,23 @@ exports.showSliders= async (req,res) => {
         res.status(200).json({sliders});
     }catch(error){
         console.error("Error fatshing sliders:", error);
+        res.status(500).json({ message: "Something went wrong" });
+    }
+};
+
+exports.ShowsomeProducts = async (req, res) => {
+    try {
+        const products = await Product.find({},{
+            name:1,
+            showImage:1,
+            price:1,
+            rating:1,
+            ratingCount:1,
+            _id:0,
+        }).sort({createdAt:-1}).limit(8);
+        res.status(200).json({ products });
+    } catch (error) {
+        console.error("Error fetching products:", error);
         res.status(500).json({ message: "Something went wrong" });
     }
 };
