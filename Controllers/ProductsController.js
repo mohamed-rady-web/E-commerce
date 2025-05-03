@@ -1,6 +1,6 @@
 const Product =require('../Models/Productsmodel')
 const Offers=require('../Models/OffersModel');
-const slider = require('../Models/Slidermodel')
+const Slider = require('../Models/SliderModel')
 
 const categoryMap = {
     "phone": "Phone",
