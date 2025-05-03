@@ -1,7 +1,7 @@
 const Product =require('../Models/Productsmodel')
 const Offers=require('../Models/OffersModel');
 const Productsmodel = require('../Models/Productsmodel');
-const Slider = require ('../Models/SliderModel')
+const slider = require('../Models/Slidermodel')
 const categoryMap = {
     "phone": "Phone",
     "pc-laptop": "Pc/Laptop",
@@ -36,6 +36,7 @@ exports.AddToFlashSale = async (req, res) => {
         }
         const Offerproduct = await Offers.create({
             productId:productId,
+            productName: product.name,
             offerPercent: offerPercent,
             offerPrice: offerPrice,
             offerImage: offerImage,

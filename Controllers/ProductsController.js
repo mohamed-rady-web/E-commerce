@@ -1,6 +1,6 @@
 const Product =require('../Models/Productsmodel')
 const Offers=require('../Models/OffersModel');
-
+const slider = require('../Models/Slidermodel')
 
 const categoryMap = {
     "phone": "Phone",
@@ -80,7 +80,7 @@ exports.ShowProduct = async (req, res) => {
 
         res.status(200).json({ 
             success: true,
-            data:{name:product.name,description:product.description,rate:product.rate,Cover:product.CoverImage,Images:product.productImage,category:product.category}
+            data: product,
         });
     } catch (error) {
         console.error("Error fetching product:", error);
@@ -267,7 +267,7 @@ exports.ShowFlashOffers = async (req, res) => {
 };
 exports.showSliders= async (req,res) => {
     try{
-        const sliders = await Slider.find({},{
+        const sliders = await slider.find({},{
             _id:0,
             Image:1,
             Title:1,
