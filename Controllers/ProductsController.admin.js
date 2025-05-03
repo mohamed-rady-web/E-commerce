@@ -45,7 +45,7 @@ exports.AddToFlashSale = async (req, res) => {
         })
        const status =await Productsmodel.findOneAndUpdate({productId},
         {$set:{isInFlashSale:true}}, {new:true});
-        res.status(200).json({ message: "Product added to flash sale", Offerproduct:{Percent:Offerproduct.offerPercent,Image:Offerproduct.offerImage,discription:product.description,price:Offerproduct.offerPrice,endDate:Offerproduct.endDate} });
+        res.status(200).json({ message: "Product added to flash sale", Offerproduct});
 
     } catch (error) {
         console.error("Error adding product to flash sale:", error);

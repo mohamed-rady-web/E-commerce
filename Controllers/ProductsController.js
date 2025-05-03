@@ -206,12 +206,7 @@ exports.Catgory = async (req, res) => {
 exports.BestSelling = async (req, res) => {
     try{    
         const products = await Product.find({},{
-            name:1,
-            showImage:1,
-            price:1,
-            rating:1,
-            ratingCount:1,
-            _id:0,
+            _id:0
         }).sort({ quantityinorder: -1 }).limit(8);
         res.status(200).json({ products});
         } catch (error) {
@@ -228,9 +223,6 @@ exports.showRelatedItems = async (req, res) => {
             category: category,
             productId: { $ne: Number(productId) }
         },{
-             name:1,
-             showImage:1,
-             price:1,
              _id:0,
         } 
     ).limit(4);
@@ -245,7 +237,7 @@ exports.showRelatedItems = async (req, res) => {
 
 exports.ShowOffers = async (req, res) => {
     try {
-        const offers = await Offers.find();
+        const offers = await Offers.find().limit(8);
         res.status(200).json({ offers });
     }
     catch (error) {
@@ -256,11 +248,6 @@ exports.ShowOffers = async (req, res) => {
 exports.ShowAllProducts = async (req, res) => {
     try {
         const products = await Product.find({},{
-            name:1,
-            showImage:1,
-            price:1,
-            rating:1,
-            ratingCount:1,
             _id:0,
         }).sort({createdAt:-1});
         res.status(200).json({ products });
@@ -299,11 +286,6 @@ exports.showSliders= async (req,res) => {
 exports.ShowsomeProducts = async (req, res) => {
     try {
         const products = await Product.find({},{
-            name:1,
-            showImage:1,
-            price:1,
-            rating:1,
-            ratingCount:1,
             _id:0,
         }).sort({createdAt:-1}).limit(8);
         res.status(200).json({ products });
