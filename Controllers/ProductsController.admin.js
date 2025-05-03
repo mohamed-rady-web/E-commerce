@@ -153,7 +153,7 @@ exports.slider = async (req,res) => {
         if (!req.user || req.user.role !== 'admin') {
             return res.status(403).json({ message: "Access denied" });}
             const {Image,Title,Logo,Description,ButtonText,ButtonLink}= req.body
-        const sliderprod = await slider.create(req.body);
+        const sliderprod = await Slider.create(req.body);
         res.status(201).json({ message: "Slider created successfully" });
     }catch(error){
         console.error("Error Creating slider:", error);
