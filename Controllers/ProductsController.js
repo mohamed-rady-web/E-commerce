@@ -267,7 +267,7 @@ exports.ShowFlashOffers = async (req, res) => {
 };
 exports.showSliders= async (req,res) => {
     try{
-        const sliders = await slider.find({},{
+        const sliders = await Slider.find({},{
             _id:0,
             Image:1,
             Title:1,
