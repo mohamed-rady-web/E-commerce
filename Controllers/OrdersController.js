@@ -25,7 +25,7 @@ exports.AddToCart = async (req, res) => {
         cartItem.productImage = product.imageUrl_1;
   
         await cartItem.save();
-        return res.status(200).json({ message: "Quantity updated", cartItem });
+        return res.status(200).json({ message: "Quantity updated" });
       } else {
         cartItem = new Cart({
           userId,
@@ -36,7 +36,7 @@ exports.AddToCart = async (req, res) => {
           productImage: product.imageUrl_1
         });
         await cartItem.save();
-        return res.status(201).json({ message: "Product added to cart", cartItem });
+        return res.status(201).json({ message: "Product added to cart"});
       }
     } catch (error) {
       console.error("AddToCart Error:", error);
@@ -54,7 +54,7 @@ exports.Cart = async (req, res) => {
         const cartItems = await Cart.find({ userId }); 
         const cartDetails = cartItems.map(item => ({
             productName: item.productname,
-            CartItemId:item.cartItemId,
+            cartItemId:item.cartItemId,
             price: item.productPrice,
             image: item.productImage,
             quantity: item.quantity,
