@@ -33,7 +33,7 @@ exports.AddToCart = async (req, res) => {
           quantity: 1,
           productname: product.name,
           productPrice: product.price,
-          productImage: product.imageUrl_1
+          productImage: product.showImage
         });
         await cartItem.save();
         return res.status(201).json({ message: "Product added to cart"});
